@@ -1,22 +1,32 @@
 package com.projectJava.thymeleaf.form;
 
 public class PersonForm {
-    private String firstName;
-    private String lastName;
 
-    public String getFirstName() {
-        return firstName;
+    private String name;
+    private int ID;
+    private String type;
+
+    public String getName() {
+        return (this.name);
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public int getID() {
+        return (this.ID);
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public String getType() {
+        return (this.type);
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

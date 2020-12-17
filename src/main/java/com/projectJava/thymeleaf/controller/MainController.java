@@ -3,24 +3,25 @@ package com.projectJava.thymeleaf.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.projectJava.thymeleaf.model.Person;
+import com.projectJava.thymeleaf.model.Personnage;
 import com.projectJava.thymeleaf.form.PersonForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
 
 @Controller
 public class MainController {
 
-    private static List<Person> persons = new ArrayList<Person>();
+    private static List<Personnage> personnages = new ArrayList<Personnage>();
 
-    static {
-        persons.add(new Person("Bill", "Gates"));
+    /*static {
+        persons.add(new Person("Bill", true));
         persons.add(new Person("Steve", "Jobs"));
-    }
+    }*/
 
     // Injectez (inject) via application.properties.
     @Value("${welcome.message}")
@@ -28,6 +29,9 @@ public class MainController {
 
     @Value("${error.message}")
     private String errorMessage;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String index(Model model) {
@@ -37,10 +41,10 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping(value = { "/personList" }, method = RequestMethod.GET)
+    @GetMapping(value = { "/personList" })
     public String personList(Model model) {
-
-        model.addAttribute("persons", persons);
+        Personnage[] personnages =restTemplate.getForObject("http://localhost:8081/personnages", Personnage[].class);
+        model.addAttribute("persons", personnages);
 
         return "personList";
     }
@@ -54,17 +58,17 @@ public class MainController {
         return "addPerson";
     }
 
-    @RequestMapping(value = { "/addPerson" }, method = RequestMethod.POST)
+    @PostMapping(value = { "/addPerson" })
     public String savePerson(Model model, //
                              @ModelAttribute("personForm") PersonForm personForm) {
 
-        String firstName = personForm.getFirstName();
-        String lastName = personForm.getLastName();
-
-        if (firstName != null && firstName.length() > 0 //
-                && lastName != null && lastName.length() > 0) {
-            Person newPerson = new Person(firstName, lastName);
-            persons.add(newPerson);
+        String name = personForm.getName();
+        String type = personForm.getType();
+//toDo:generer ID
+        if (name != null && name.length() > 0 )//
+                {
+            Personnage newPersonnage = new Personnage(name,0,type);
+            personnages.add(newPersonnage);
 
             return "redirect:/personList";
         }

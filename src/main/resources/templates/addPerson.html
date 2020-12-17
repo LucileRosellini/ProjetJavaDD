@@ -16,11 +16,11 @@
 
 <form th:action="@{/addPerson}"
       th:object="${personForm}" method="POST">
-    First Name:
-    <input type="text" th:field="*{firstName}" />
+    Name:
+    <input type="text" th:field="*{name}" />
     <br/>
-    Last Name:
-    <input type="text" th:field="*{lastName}" />
+    Type:
+    <input type="text" th:field="*{type}" />
     <br/>
     <input type="submit" value="Create" />
 </form>

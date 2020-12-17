@@ -45,6 +45,7 @@ public class MainController {
     public String personList(Model model) {
         Personnage[] personnages =restTemplate.getForObject("http://localhost:8081/personnages", Personnage[].class);
         model.addAttribute("persons", personnages);
+        //revoir model.addAttribute
 
         return "personList";
     }
@@ -59,16 +60,14 @@ public class MainController {
     }
 
     @PostMapping(value = { "/addPerson" })
-    public String savePerson(Model model, //
-                             @ModelAttribute("personForm") PersonForm personForm) {
-
+    public String savePerson(Model model, @ModelAttribute("personForm") PersonForm personForm) {
         String name = personForm.getName();
         String type = personForm.getType();
 //toDo:generer ID
-        if (name != null && name.length() > 0 )//
+        if (name != null && name.length() > 0 && type != null)
                 {
             Personnage newPersonnage = new Personnage(name,0,type);
-            personnages.add(newPersonnage);
+           restTemplate.postForObject("http://localhost:8081/personnages",newPersonnage,Personnage.class );
 
             return "redirect:/personList";
         }
